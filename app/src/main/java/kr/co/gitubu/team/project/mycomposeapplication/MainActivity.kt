@@ -34,21 +34,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable // 구성 가능한 함수(컴포저블 함수)
 fun Greeting(name: String) {
-    // 기본 테마가 머티리얼 테마로 적용됨
-    androidx.compose.material.Surface(
-        color = MaterialTheme.colors.primary,
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp) {
-        Column(modifier = Modifier.padding(24.dp)) {
-            Text(text = "안녕하세요")
-            Text(text = "안녕!")
-        }
-        //Text(text = "Hello $name!", modifier = Modifier.padding(24.dp))
-    }
+
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun DefaultPreview() {  // 앱을 완전 빌드하지않고도 design을 보게 해준다. 이름은 바꿀 수 있어도 매개변수를 받아선 안된다.
     MyComposeApplicationTheme {
         Greeting("Android")
     }
