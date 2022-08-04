@@ -1,13 +1,13 @@
 package kr.co.gitubu.team.project.mycomposeapplication
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -25,7 +25,18 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MyApp(names: List<String> = listOf("World", "Compose")) {
+fun MyApp(){
+    // TODO: This state should be hoisted
+    var shouldShowOnboarding by remember { mutableStateOf(true) }   // by로 위임(delegate) => .value 쓸 필요없이 바로 변수명으로 이용 가능
+    // 가장 직관적인 OnboardingScreen 컴포저블로 상태를 전달하는 것이지만 깔끔하지 못하다
+    if(shouldShowOnboarding){
+        OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false})    // 콜백 함수 삽입
+    }else
+        Greetings()
+}
+
+@Composable
+fun Greetings(names: List<String> = listOf("World", "Compose")) {
     // A surface container using the 'background' color from the theme
     Surface(color = MaterialTheme.colors.background,
     modifier = Modifier.padding(vertical = 4.dp)) {
@@ -60,6 +71,37 @@ fun Greeting(name: String) {
                 Text(if(expanded.value) "Show less" else "Show more")
             }
         }
+    }
+}
+
+@Composable
+fun OnboardingScreen(
+    onContinueClicked: () -> Unit   // 콜백 함수 넘겨받음
+) {
+
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,   // 수직 가운데 정렬
+            horizontalAlignment = Alignment.CenterHorizontally  // 수평 "
+        ) {
+            Text("Welcome to the Basics Codelab!")
+            Button(
+                modifier = Modifier.padding(vertical = 24.dp),
+                onClick = onContinueClicked  // onClick: 버튼이 클릭되면 onClick에 정의된 함수를 호출하고 내부의 명령을 실행
+            ) {
+                Text("Continue")
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320, heightDp = 320, uiMode = UI_MODE_NIGHT_YES) // 나이트모드 미리보기
+@Preview(showBackground = true, widthDp = 320, heightDp = 320)
+@Composable
+fun OnboardingPreview() {
+    MyComposeApplicationTheme() {
+        OnboardingScreen(onContinueClicked = {})    // 미리보기에서는 특별한 동작이 없기 때문에 아무것도 바뀌지 않아야 함
     }
 }
 
